@@ -32,7 +32,7 @@
         }
         .footer {
             font-size: 12px;
-            margin-top: 20px;
+            margin-top: 50px;
             color: #bbb;
         }
         .footer a {
@@ -52,11 +52,6 @@
             height: 16px;
             margin-left: 5px;
         }
-        .suffix {
-            margin-left: 10px;
-            color: #bbb;
-            font-size: 14px;
-        }
     </style>
     <script>
         const conversionRate = 10000000; // 1 Platinum = 10,000,000 Gold
@@ -68,14 +63,6 @@
         function parseNumber(input) {
             let num = parseFloat(input.replace(/,/g, ''));
             return isNaN(num) ? "" : num;
-        }
-
-        function updateSuffix(value, suffixId) {
-            let suffix = "";
-            if (value >= 1e9) suffix = "Billion";
-            else if (value >= 1e6) suffix = "Million";
-            else if (value >= 1e3) suffix = "Thousand";
-            document.getElementById(suffixId).innerText = suffix;
         }
 
         function calculateOriginalPrice() {
@@ -109,7 +96,6 @@
             let diff = newLength - originalLength;
             input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
             
-            updateSuffix(formattedValue, input.dataset.suffix);
             calculateNewPrices();
         }
 
@@ -135,14 +121,12 @@
     <h2>Percentage Increase & Gold Price Calculator</h2>
     <div class="input-container">
         <label for="newPrice">New Price (Platinum):<img src="https://i.postimg.cc/DfSMCPPx/plat.png" alt="Platinum Logo"></label>
-        <input type="text" id="newPrice" placeholder="Enter new price" data-suffix="suffixPlat" oninput="formatAndCalculate(event)">
-        <span id="suffixPlat" class="suffix"></span>
+        <input type="text" id="newPrice" placeholder="Enter new price" oninput="formatAndCalculate(event)">
     </div>
     <br>
     <div class="input-container">
         <label for="newPriceGold">New Price (Gold):<img src="https://i.postimg.cc/44jFjH8s/gold.png" alt="Gold Logo"></label>
-        <input type="text" id="newPriceGold" placeholder="Enter new price in Gold" data-suffix="suffixGold" oninput="formatAndCalculate(event)">
-        <span id="suffixGold" class="suffix"></span>
+        <input type="text" id="newPriceGold" placeholder="Enter new price in Gold" oninput="formatAndCalculate(event)">
     </div>
     <br>
     <label for="percentageIncrease">Percentage Increase (%):</label>
