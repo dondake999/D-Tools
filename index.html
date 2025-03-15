@@ -60,6 +60,16 @@
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
+        function formatNumberWithSuffix(number) {
+            if (number < 1) return number.toFixed(2); 
+            const suffixes = ["", "K", "M", "B", "T"];
+            let tier = Math.floor(Math.log10(number) / 3);
+            if (tier === 0) return number.toFixed(2);
+            let scale = Math.pow(10, tier * 3);
+            let scaledNumber = number / scale;
+            return scaledNumber.toFixed(2) + " " + suffixes[tier];
+        }
+
         function parseNumber(input) {
             let num = parseFloat(input.replace(/,/g, ''));
             return isNaN(num) ? "" : num;
@@ -78,9 +88,9 @@
             let oldPriceGold = oldPrice * conversionRate;
             
             document.getElementById("result").innerHTML = `Original Price:<br>
-                <strong>${formatNumberWithCommas(oldPrice.toFixed(2))} Platinum</strong>
+                <strong>${formatNumberWithSuffix(oldPrice)} Platinum</strong>
                 <img src="https://i.postimg.cc/DfSMCPPx/plat.png" alt="Platinum Logo"><br>
-                <strong>${formatNumberWithCommas(oldPriceGold.toFixed(0))} Gold</strong>
+                <strong>${formatNumberWithSuffix(oldPriceGold)} Gold</strong>
                 <img src="https://i.postimg.cc/44jFjH8s/gold.png" alt="Gold Logo">`;
         }
 
