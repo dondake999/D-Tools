@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Percentage Increase & Gold Price Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            text-align: left;
+            background-color: #222;
+            border: 1px solid #444;
+            color: #fff;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        .footer {
+            font-size: 12px;
+            margin-top: 20px;
+            color: #bbb;
+        }
+        .footer a {
+            color: #6200ea;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-container img {
+            width: 16px;
+            height: 16px;
+            margin-left: 5px;
+        }
+        .suffix {
+            margin-left: 10px;
+            color: #bbb;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        const conversionRate = 10000000; // 1 Platinum = 10,000,000 Gold
+
+        function formatNumberWithCommas(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        function parseNumber(input) {
+            let num = parseFloat(input.replace(/,/g, ''));
+            return isNaN(num) ? "" : num;
+        }
+
+        function updateSuffix(value, suffixId) {
+            let suffix = "";
+            if (value >= 1e9) suffix = "Billion";
+            else if (value >= 1e6) suffix = "Million";
+            else if (value >= 1e3) suffix = "Thousand";
+            document.getElementById(suffixId).innerText = suffix;
+        }
+
+        function calculateOriginalPrice() {
+            let newPrice = parseNumber(document.getElementById("newPrice").value);
+            let percentageIncrease = parseNumber(document.getElementById("percentageIncrease").value);
+            
+            if (newPrice === "" || percentageIncrease === "" || percentageIncrease <= 0) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+            
+            let oldPrice = newPrice / (1 + (percentageIncrease / 100));
+            let oldPriceGold = oldPrice * conversionRate;
+            
+            document.getElementById("result").innerHTML = `Original Price:<br>
+                <strong>${formatNumberWithCommas(oldPrice.toFixed(2))} Platinum</strong>
+                <img src="https://i.postimg.cc/DfSMCPPx/plat.png" alt="Platinum Logo"><br>
+                <strong>${formatNumberWithCommas(oldPriceGold.toFixed(0))} Gold</strong>
+                <img src="https://i.postimg.cc/44jFjH8s/gold.png" alt="Gold Logo">`;
+        }
+
+        function formatAndCalculate(event) {
+            let input = event.target;
+            let cursorPosition = input.selectionStart;
+            let originalLength = input.value.length;
+            
+            let formattedValue = parseNumber(input.value);
+            input.value = formattedValue !== "" ? formatNumberWithCommas(formattedValue) : "";
+            
+            let newLength = input.value.length;
+            let diff = newLength - originalLength;
+            input.setSelectionRange(cursorPosition + diff, cursorPosition + diff);
+            
+            updateSuffix(formattedValue, input.dataset.suffix);
+            calculateNewPrices();
+        }
+
+        function calculateNewPrices() {
+            let newPricePlat = parseNumber(document.getElementById("newPrice").value);
+            let newPriceGoldInput = parseNumber(document.getElementById("newPriceGold").value);
+            
+            if (document.activeElement.id === "newPrice" && newPricePlat !== "") {
+                document.getElementById("newPriceGold").value = formatNumberWithCommas((newPricePlat * conversionRate).toFixed(0));
+            } else if (document.activeElement.id === "newPrice") {
+                document.getElementById("newPriceGold").value = "";
+            }
+            
+            if (document.activeElement.id === "newPriceGold" && newPriceGoldInput !== "") {
+                document.getElementById("newPrice").value = formatNumberWithCommas((newPriceGoldInput / conversionRate).toFixed(2));
+            } else if (document.activeElement.id === "newPriceGold") {
+                document.getElementById("newPrice").value = "";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Percentage Increase & Gold Price Calculator</h2>
+    <div class="input-container">
+        <label for="newPrice">New Price (Platinum):<img src="https://i.postimg.cc/DfSMCPPx/plat.png" alt="Platinum Logo"></label>
+        <input type="text" id="newPrice" placeholder="Enter new price" data-suffix="suffixPlat" oninput="formatAndCalculate(event)">
+        <span id="suffixPlat" class="suffix"></span>
+    </div>
+    <br>
+    <div class="input-container">
+        <label for="newPriceGold">New Price (Gold):<img src="https://i.postimg.cc/44jFjH8s/gold.png" alt="Gold Logo"></label>
+        <input type="text" id="newPriceGold" placeholder="Enter new price in Gold" data-suffix="suffixGold" oninput="formatAndCalculate(event)">
+        <span id="suffixGold" class="suffix"></span>
+    </div>
+    <br>
+    <label for="percentageIncrease">Percentage Increase (%):</label>
+    <input type="text" id="percentageIncrease" placeholder="Enter percentage increase" oninput="formatAndCalculate(event)">
+    <br><br>
+    <button onclick="calculateOriginalPrice()">Calculate</button>
+    <br><br>
+    <div id="result"></div>
+    <br><br>
+    <p class="footer">Made by <strong>DONDAKE</strong> a.k.a <strong>ucandie</strong></p>
+    <p class="footer"><a href="https://discord.gg/ZxFErHWvZn" target="_blank">Our Discord</a></p>
+</body>
+</html>
