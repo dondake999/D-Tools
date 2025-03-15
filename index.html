@@ -57,26 +57,49 @@
             font-weight: bold;
         }
         #percentageIncrease {
-            width: 80px; /* Adjusted to fit 4-5 digits */
+            width: 80px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+        .modal img {
+            margin-top: 10%;
+            max-width: 80%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
         }
     </style>
     <script>
-        const conversionRate = 10000000; // 1 Platinum = 10,000,000 Gold
+        const conversionRate = 10000000;
 
         function formatNumberWithCommas(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
 
-function formatNumberWithSuffix(number) {
-    if (number < 1) return number.toFixed(2);
-    const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx"];
-    let tier = Math.floor(Math.log10(number) / 3);
-    if (tier === 0) return number.toFixed(2);
-    let scale = Math.pow(10, tier * 3);
-    let scaledNumber = number / scale;
-    return scaledNumber.toFixed(2) + " " + (suffixes[tier] || "Sx+");
-}
-
+        function formatNumberWithSuffix(number) {
+            if (number < 1) return number.toFixed(2);
+            const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx"];
+            let tier = Math.floor(Math.log10(number) / 3);
+            if (tier === 0) return number.toFixed(2);
+            let scale = Math.pow(10, tier * 3);
+            let scaledNumber = number / scale;
+            return scaledNumber.toFixed(2) + " " + (suffixes[tier] || "Sx+");
+        }
 
         function parseNumber(input) {
             let num = parseFloat(input.replace(/,/g, ''));
@@ -145,6 +168,15 @@ function formatNumberWithSuffix(number) {
                 suffixSpan.innerText = "";
             }
         }
+
+        function openTooltip(event) {
+            event.preventDefault();
+            document.getElementById("tooltipModal").style.display = "block";
+        }
+
+        function closeTooltip() {
+            document.getElementById("tooltipModal").style.display = "none";
+        }
     </script>
 </head>
 <body>
@@ -162,12 +194,20 @@ function formatNumberWithSuffix(number) {
     <br>
     <label for="percentageIncrease">Percentage Increase (%):</label>
     <input type="text" id="percentageIncrease" placeholder="Enter %" oninput="formatAndCalculate(event)">
+    <a href="#" onclick="openTooltip(event)" style="color: #6200ea; margin-left: 5px;">What is this?</a>
+
+    <!-- Tooltip Modal -->
+    <div id="tooltipModal" class="modal">
+        <span class="close" onclick="closeTooltip()">&times;</span>
+        <img src="https://i.postimg.cc/Dm3VhxT3/inflate-2.jpg" alt="Tooltip Explanation">
+    </div>
+
     <br><br>
     <button onclick="calculateOriginalPrice()">Calculate</button>
     <br><br>
     <div id="result"></div>
     <br><br>
     <p class="footer">Made by <strong>DONDAKE</strong> a.k.a <strong>ucandie</strong></p>
-    <p class="footer"><a href="https://discord.gg/ZxFErHWvZn" target="_blank">Our Discord</a></p>
+    <p class="footer"><a href="https://i.postimg.cc/V6L9PyX9/saw-mill-blink.webp" target="_blank">Our Discord</a></p>
 </body>
 </html>
