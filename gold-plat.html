@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaia Gold ⇄ Platinum Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #121212;
+            color: #ffffff;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            text-align: right;
+            background-color: #222;
+            border: 1px solid #444;
+            color: #fff;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #6200ea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        .footer {
+            font-size: 12px;
+            margin-top: 20px;
+            color: #bbb;
+        }
+        .footer a {
+            color: #6200ea;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h2>Gaia Online Gold ⇄ Platinum Converter</h2>
+    <p>Current Rate: <strong>1 Platinum = 10,000,000 Gold</strong></p>
+    
+    <input type="text" id="goldInput" placeholder="Enter Gold" oninput="formatNumber(this, 'gold')" />
+    <span id="goldSuffix"></span>
+    <button onclick="convertToPlatinum()">Convert to Platinum</button>
+    <p id="platResult"></p>
+    
+    <input type="text" id="platInput" placeholder="Enter Platinum" oninput="formatNumber(this, 'plat')" />
+    <span id="platSuffix"></span>
+    <button onclick="convertToGold()">Convert to Gold</button>
+    <p id="goldResult"></p>
+
+    <script>
+        const conversionRate = 10000000; // 1 Plat = 10M Gold
+
+        function convertToPlatinum() {
+            let gold = parseFloat(document.getElementById("goldInput").value.replace(/,/g, ''));
+            if (!isNaN(gold)) {
+                let platinum = gold / conversionRate;
+                document.getElementById("platResult").innerText = `${gold.toLocaleString()} Gold (${getGoldSuffix(gold)}) = ${platinum.toLocaleString()} Platinum (${getPlatSuffix(platinum)})`;
+            }
+        }
+
+        function convertToGold() {
+            let platinum = parseFloat(document.getElementById("platInput").value.replace(/,/g, ''));
+            if (!isNaN(platinum)) {
+                let gold = platinum * conversionRate;
+                document.getElementById("goldResult").innerText = `${platinum.toLocaleString()} Platinum (${getPlatSuffix(platinum)}) = ${gold.toLocaleString()} Gold (${getGoldSuffix(gold)})`;
+            }
+        }
+
+        function formatNumber(input, type) {
+            let value = input.value.replace(/,/g, '');
+            if (!isNaN(value) && value !== '') {
+                let numericValue = parseFloat(value);
+                input.value = numericValue.toLocaleString();
+                if (type === 'gold') {
+                    updateGoldSuffix(numericValue);
+                } else if (type === 'plat') {
+                    updatePlatSuffix(numericValue);
+                }
+            }
+        }
+
+        function updateGoldSuffix(value) {
+            document.getElementById("goldSuffix").innerText = getGoldSuffix(value);
+        }
+
+        function updatePlatSuffix(value) {
+            document.getElementById("platSuffix").innerText = getPlatSuffix(value);
+        }
+
+        function getGoldSuffix(value) {
+            if (value >= 1e33) return `${(value / 1e33).toFixed(2)} Decillion`;
+            if (value >= 1e30) return `${(value / 1e30).toFixed(2)} Nonillion`;
+            if (value >= 1e27) return `${(value / 1e27).toFixed(2)} Octillion`;
+            if (value >= 1e24) return `${(value / 1e24).toFixed(2)} Septillion`;
+            if (value >= 1e21) return `${(value / 1e21).toFixed(2)} Sextillion`;
+            if (value >= 1e18) return `${(value / 1e18).toFixed(2)} Quintillion`;
+            if (value >= 1e15) return `${(value / 1e15).toFixed(2)} Quadrillion`;
+            if (value >= 1e12) return `${(value / 1e12).toFixed(2)} Trillion`;
+            if (value >= 1e9) return `${(value / 1e9).toFixed(2)} Billion`;
+            if (value >= 1e6) return `${(value / 1e6).toFixed(2)} Million`;
+            return "";
+        }
+
+        function getPlatSuffix(value) {
+            if (value >= 1e9) return `${(value / 1e9).toFixed(value % 1e9 === 0 ? 0 : 2)} Billion`;
+            if (value >= 1e6) return `${(value / 1e6).toFixed(value % 1e6 === 0 ? 0 : 2)} Million`;
+            if (value >= 1e3) return `${(value / 1e3).toFixed(value % 1e3 === 0 ? 0 : 2)} Thousand`;
+            return "";
+        }
+    </script>
+    
+    <p class="footer">Made by <strong>DONDAKE</strong> a.k.a <strong>ucandie</strong></p>
+    <p class="footer"><a href="https://discord.gg/ZxFErHWvZn" target="_blank">Our Discord</a></p>
+</body>
+</html>
