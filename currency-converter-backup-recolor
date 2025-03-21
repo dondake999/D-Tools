@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Currency Converter & Deflator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+            background-color: #f5f0e1;
+            color: #5e4c3a;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+            width: 200px;
+            text-align: left;
+            background-color: #ede4d1;
+            border: 1px solid #b8a58d;
+            color: #5e4c3a;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #c1a57b;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background-color: #8b7355;
+        }
+        .footer {
+            font-size: 12px;
+            margin-top: 30px;
+            color: #7c6a58;
+        }
+        .input-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .input-container img {
+            width: 16px;
+            height: 16px;
+            margin-left: 5px;
+        }
+        .suffix {
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        #percentageIncrease {
+            width: 80px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        .modal img {
+            margin-top: 10%;
+            max-width: 80%;
+            height: auto;
+            border-radius: 8px;
+        }
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 25px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+    </style>
+    <script>
+        const conversionRate = 1e7;
+        function formatNumberWithCommas(n) {
+            return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        }
+        function formatNumberWithSuffix(n) {
+            if (n < 1) return n.toFixed(2);
+            const s = ['', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx'];
+            let t = Math.floor(Math.log10(n) / 3);
+            if (t === 0) return n % 1 === 0 ? n.toFixed(0) : n.toFixed(2);
+            let sc = Math.pow(10, t * 3);
+            let formatted = (n / sc).toFixed(2);
+            if (formatted.endsWith('.00')) formatted = formatted.slice(0, -3);
+            return formatted + ' ' + (s[t] || 'Sx+');
+        }
+        function parseNumber(i) {
+            let n = parseFloat(i.replace(/,/g, ''));
+            return isNaN(n) ? '' : n;
+        }
+        function calculateOriginalPrice() {
+            let np = parseNumber(document.getElementById('newPrice').value),
+                pi = parseNumber(document.getElementById('percentageIncrease').value);
+            if (np === '' || pi === '' || pi <= 0) {
+                alert('Please enter valid numbers.');
+                return;
+            }
+            let op = np / (1 + pi / 100),
+                og = op * conversionRate;
+            document.getElementById('result').innerHTML = `Previous Average Price:<br><strong>${formatNumberWithSuffix(op)} Platinum</strong>
+            <img src='https://i.postimg.cc/DfSMCPPx/plat.png' alt='Platinum Logo'><br><strong>${formatNumberWithSuffix(og)} Gold</strong>
+            <img src='https://i.postimg.cc/44jFjH8s/gold.png' alt='Gold Logo'>`;
+        }
+        function formatAndCalculate(e) {
+            let i = e.target, c = i.selectionStart, oL = i.value.length, fv = parseNumber(i.value);
+            i.value = fv !== '' ? formatNumberWithCommas(fv) : '';
+            let nL = i.value.length, d = nL - oL;
+            i.setSelectionRange(c + d, c + d);
+            calculateNewPrices();
+            updateGoldSuffix();
+        }
+        function calculateNewPrices() {
+            let np = parseNumber(document.getElementById('newPrice').value),
+                ng = parseNumber(document.getElementById('newPriceGold').value);
+            if (document.activeElement.id === 'newPrice' && np !== '')
+                document.getElementById('newPriceGold').value = formatNumberWithCommas((np * conversionRate).toFixed(0));
+            else if (document.activeElement.id === 'newPrice')
+                document.getElementById('newPriceGold').value = '';
+            if (document.activeElement.id === 'newPriceGold' && ng !== '')
+                document.getElementById('newPrice').value = formatNumberWithCommas((ng / conversionRate).toFixed(2));
+            else if (document.activeElement.id === 'newPriceGold')
+                document.getElementById('newPrice').value = '';
+        }
+        function updateGoldSuffix() {
+            let g = parseNumber(document.getElementById('newPriceGold').value),
+                s = document.getElementById('goldSuffix');
+            s.innerText = g >= 1e3 ? formatNumberWithSuffix(g) : '';
+        }
+        function openTooltip(e) {
+            e.preventDefault();
+            document.getElementById('tooltipModal').style.display = 'block';
+        }
+        function closeTooltip() {
+            document.getElementById('tooltipModal').style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+    <h2>Currency Converter & Deflator</h2>
+    <div class='input-container'>
+        <label for='newPrice'>Platinum: <img src='https://i.postimg.cc/DfSMCPPx/plat.png' alt='Platinum Logo'></label>
+        <input type='text' id='newPrice' placeholder='Enter Platinum' oninput='formatAndCalculate(event)'>
+    </div>
+    <br>
+    <div class='input-container'>
+        <label for='newPriceGold'>Gold: <img src='https://i.postimg.cc/44jFjH8s/gold.png' alt='Gold Logo'></label>
+        <input type='text' id='newPriceGold' placeholder='Enter Gold' oninput='formatAndCalculate(event)'>
+        <span id='goldSuffix' class='suffix'></span>
+    </div>
+    <br>
+    <label for='percentageIncrease'>Percentage Increase (%):</label>
+    <input type='text' id='percentageIncrease' placeholder='Enter %' oninput='formatAndCalculate(event)'>
+    <a href='#' onclick='openTooltip(event)' style='color:#8b7355; margin-left:5px; font-size:12px;'>What is this?</a>
+    <div id='tooltipModal' class='modal'>
+        <span class='close' onclick='closeTooltip()'>&times;</span>
+        <img src='https://i.postimg.cc/Dm3VhxT3/inflate-2.jpg' alt='Tooltip Explanation'>
+    </div>
+    <br><br>
+    <button onclick='calculateOriginalPrice()'>Calculate</button>
+    <br><br>
+    <div id='result'></div>
+    <br><br>
+    <p class='footer'>Made by <strong>DONDAKE</strong> a.k.a <strong>ucandie</strong></p>
+</body>
+</html>
