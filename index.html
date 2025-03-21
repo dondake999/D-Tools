@@ -22,62 +22,76 @@
             font-size: 30px;
             font-weight: bold;
             color: #bb86fc;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .container {
             background-color: #1e1e1e;
-            padding: 10px;
-            border-radius: 10px;
+            padding: 4px 8px;
+            border-radius: 8px;
             border: 2px solid #6200ea;
             box-shadow: 0px 4px 15px rgba(98, 0, 234, 0.5);
-            min-width: 280px;
-            max-width: 350px;
-            margin-bottom: 15px;
+            display: inline-block;
+            white-space: nowrap;
+            margin-bottom: 8px;
+            height: auto;
         }
         .app-list {
             list-style: none;
             padding: 0;
             display: flex;
-            gap: 12px;
+            gap: 8px;
             justify-content: center;
+            margin: 0;
         }
         .app-list li {
             margin: 0;
+            display: inline-block;
         }
         a {
             text-decoration: none;
             color: #bb86fc;
             font-weight: bold;
-            font-size: 14px;
-            padding: 6px 10px;
+            font-size: 13px;
+            padding: 4px 8px;
             border-radius: 5px;
             transition: background 0.3s ease;
             cursor: pointer;
+            display: inline-block;
+            white-space: nowrap;
         }
         a:hover {
             color: #ffffff;
             background-color: #3700b3;
         }
         .footer {
-            margin-top: 15px;
+            margin-top: 12px;
             font-size: 12px;
             color: #bbb;
         }
-        .footer a {
+        .footer-links {
+            margin-top: 4px;
+        }
+        .footer-links a {
             color: #6200ea;
             text-decoration: none;
+            display: block; /* Places "Buy me a coffee" below "Our Discord" */
+            margin: 4px 0;
         }
-        .footer a:hover {
+        .footer-links a.buy-coffee {
+            font-size: 10px; /* Smaller font size */
+            opacity: 0.8;
+        }
+        .footer-links a:hover {
             text-decoration: underline;
         }
         iframe {
             width: 90%;
-            height: 600px;
+            height: 750px;
             border: 2px solid #6200ea;
-            margin-top: 20px;
+            margin-top: 15px;
             border-radius: 8px;
             background: #1e1e1e;
-            display: none; /* Hide initially */
+            display: none;
         }
     </style>
 </head>
@@ -98,7 +112,10 @@
     <iframe id="contentFrame"></iframe>
 
     <p class="footer">Made by <strong>DONDAKE</strong> a.k.a <strong>ucandie</strong></p>
-    <p class="footer"><a href="https://i.postimg.cc/V6L9PyX9/saw-mill-blink.webp" target="_blank">Our Discord</a></p>
+    <p class="footer-links">
+        <a href="https://i.postimg.cc/V6L9PyX9/saw-mill-blink.webp" target="_blank">Our Discord</a>
+        <a href="#" target="_blank" class="buy-coffee">Buy me a coffee</a>
+    </p>
 
     <script>
         function loadPage(page) {
