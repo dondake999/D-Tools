@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buff Assignment</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background-color: #f5f5dc; 
+            color: #5a4632; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        }
+
+        .container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+
+        /* Buttons in a horizontal line */
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Main layout */
+        .buff-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 15px;
+            background-color: #e3d5b5;
+            border-radius: 8px;
+            border: 1px solid #5a4632;
+        }
+
+        /* Members box */
+        .party { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px;
+        }
+
+        .member { 
+            display: flex; 
+            align-items: center; 
+            border: 1px solid #5a4632; 
+            padding: 8px; 
+            width: 250px;
+            background-color: #dac5a8; 
+            border-radius: 6px;
+        }
+
+        /* Assigned buff area */
+        .dropzone { 
+            display: flex; 
+            gap: 5px; 
+            min-height: 40px; 
+            border: 1px dashed #5a4632; 
+            padding: 5px; 
+            min-width: 120px; 
+            background-color: #cbb292; 
+            border-radius: 6px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Buff Icons */
+        .buff { 
+            width: 35px; 
+            height: 35px; 
+            cursor: grab; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Buff Pool */
+        .buffs { 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            gap: 5px;
+        }
+
+        button { 
+            background-color: #8b7355; 
+            color: #fff; 
+            border: none; 
+            padding: 10px; 
+            border-radius: 5px; 
+            cursor: pointer;
+        }
+
+        button:hover { background-color: #a08968; }
+
+        input { 
+            background-color: #dac5a8; 
+            color: #5a4632; 
+            border: 1px solid #8b7355; 
+            padding: 5px; 
+            border-radius: 5px; 
+            width: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Buff Assignment</h2>
+
+        <!-- Buttons -->
+        <div class="button-container">
+            <button onclick="assignBuffs()">Assign</button>
+            <button onclick="resetBuffs()">Reset</button>
+            <button onclick="copyBuffs()">Copy</button>
+        </div>
+
+        <!-- Buff assignment area -->
+        <div class="buff-container">
+            <div class="party" id="party"></div>
+            <div id="buffPool" class="buffs"></div> 
+        </div>
+    </div>
+
+    <script>
+        const buffIcons = {
+            "Iron": "https://static.wikia.nocookie.net/zomg/images/5/56/Ring_Iron_Will_Alt.png",
+            "Keen": "https://static.wikia.nocookie.net/zomg/images/d/d9/Ring_Keen_Aye_Alt.png",
+            "Tef": "https://static.wikia.nocookie.net/zomg/images/8/88/Ring_Teflon_Spray_Alt.png",
+            "Div": "https://static.wikia.nocookie.net/zomg/images/a/a5/Ring_Divinity_Alt.png",
+            "Ghost": "https://static.wikia.nocookie.net/zomg/images/d/d8/Ring_Ghost_Alt.png",
+            "Dens": "https://static.wikia.nocookie.net/zomg/images/8/8d/Ring_My_Density_Alt.png",
+            "Sphere": "https://static.wikia.nocookie.net/zomg/images/1/11/Ring_Improbability_Sphere_Alt.png",
+            "Coy": "https://static.wikia.nocookie.net/zomg/images/3/3a/Ring_Coyote_Spirit_Alt.png",
+            "Pot": "https://static.wikia.nocookie.net/zomg/images/7/77/Ring_Pot_Lid_Alt.png",
+            "Halo": "https://static.wikia.nocookie.net/zomg/images/2/23/Ring_Healing_Halo_Alt.png",
+            "Rock": "https://static.wikia.nocookie.net/zomg/images/2/2a/Ring_Rock_Armor_Alt.png"
+        };
+
+        const buffPairs = [
+            ["Iron", "Keen"],
+            ["Tef"],
+            ["Div", "Ghost"],
+            ["Dens", "Sphere"],
+            ["Coy", "Pot"],
+            ["Halo", "Rock"]
+        ];
+
+        let members = Array.from({ length: 6 }, (_, i) => ({ name: "", buffs: [] }));
+
+        function assignBuffs() {
+            let assignedBuffs = new Set(members.flatMap(m => m.buffs));
+            let availableBuffs = buffPairs.flat().filter(buff => !assignedBuffs.has(buff));
+
+            members.forEach((member, index) => {
+                if (member.buffs.length === 0) {
+                    let pair = buffPairs[index];
+                    let availablePair = pair.filter(buff => availableBuffs.includes(buff));
+                    if (availablePair.length > 0) {
+                        member.buffs = availablePair;
+                        availableBuffs = availableBuffs.filter(buff => !availablePair.includes(buff));
+                    }
+                }
+            });
+
+            if (availableBuffs.length > 0) {
+                members.filter(m => m.buffs.length < 2).forEach(m => {
+                    while (m.buffs.length < 2 && availableBuffs.length > 0) {
+                        let buff = availableBuffs.pop();
+                        m.buffs.push(buff);
+                    }
+                });
+            }
+
+            render();
+        }
+
+        function resetBuffs() {
+            members.forEach(member => member.buffs = []);
+            render();
+        }
+
+        function dropBuff(event, memberIndex) {
+            event.preventDefault();
+            let buffName = event.dataTransfer.getData("text");
+
+            if (!members[memberIndex].buffs.includes(buffName) && members[memberIndex].buffs.length < 2) {
+                members[memberIndex].buffs.push(buffName);
+            }
+
+            render();
+        }
+
+        function renderBuffPool() {
+            const buffPool = document.getElementById("buffPool");
+            buffPool.innerHTML = "";
+            Object.keys(buffIcons).forEach(buff => {
+                if (!members.some(member => member.buffs.includes(buff))) {
+                    let img = document.createElement("img");
+                    img.src = buffIcons[buff];
+                    img.classList.add("buff");
+                    img.draggable = true;
+                    img.ondragstart = (e) => e.dataTransfer.setData("text", buff);
+                    buffPool.appendChild(img);
+                }
+            });
+        }
+
+        function copyBuffs() {
+            let text = members.map(member => `${member.name || "Unnamed"}: ${member.buffs.join("/")}`).join(" - ");
+            navigator.clipboard.writeText(text).then(() => alert("Buffs copied to clipboard!"));
+        }
+
+        function render() {
+            document.getElementById("party").innerHTML = members.map((member, index) =>
+                `<div class='member'>
+                    <input type='text' placeholder='Enter name' value='${member.name}' 
+                    oninput='updateMemberName(${index}, this.value)'>
+                    <div class='dropzone' ondrop='dropBuff(event, ${index})' ondragover='event.preventDefault()'>
+                        ${member.buffs.map(buff => `<img src='${buffIcons[buff]}' class='buff' title='${buff}'>`).join("")}
+                    </div>
+                </div>`
+            ).join("");
+            renderBuffPool();
+        }
+
+        function updateMemberName(index, value) {
+            members[index].name = value;
+        }
+
+        render();
+    </script>
+</body>
+</html>
