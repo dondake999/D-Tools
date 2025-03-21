@@ -12,17 +12,17 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
             text-align: center;
             margin: 0;
-            padding: 20px;
+            padding: 12px 0;
+            height: 100vh;
+            overflow: hidden; /* Prevents unnecessary scrolling */
         }
         .title-box {
             font-size: 30px;
             font-weight: bold;
             color: #bb86fc;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
         .container {
             background-color: #1e1e1e;
@@ -32,8 +32,8 @@
             box-shadow: 0px 4px 15px rgba(98, 0, 234, 0.5);
             display: inline-block;
             white-space: nowrap;
-            margin-bottom: 8px;
             height: auto;
+            margin-bottom: 6px;
         }
         .app-list {
             list-style: none;
@@ -64,21 +64,21 @@
             background-color: #3700b3;
         }
         .footer {
-            margin-top: 12px;
             font-size: 12px;
             color: #bbb;
+            margin: 6px 0 0; /* Removed extra space below */
         }
         .footer-links {
-            margin-top: 4px;
+            margin-top: 2px;
         }
         .footer-links a {
             color: #6200ea;
             text-decoration: none;
-            display: block; /* Places "Buy me a coffee" below "Our Discord" */
-            margin: 4px 0;
+            display: block;
+            margin: 2px 0;
         }
         .footer-links a.buy-coffee {
-            font-size: 10px; /* Smaller font size */
+            font-size: 10px;
             opacity: 0.8;
         }
         .footer-links a:hover {
@@ -88,7 +88,7 @@
             width: 90%;
             height: 750px;
             border: 2px solid #6200ea;
-            margin-top: 15px;
+            margin-top: 10px;
             border-radius: 8px;
             background: #1e1e1e;
             display: none;
